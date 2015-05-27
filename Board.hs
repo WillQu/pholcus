@@ -10,6 +10,7 @@ module Board
     , removePiece
     , movePiece
     , emptyBoard
+    , getPiece
     )
 where
 
@@ -18,11 +19,11 @@ import qualified Data.Map as Map
 
 -- | Datatype for players
 data Player = White | Black
-    deriving (Show)
+    deriving (Show, Eq)
 
 -- | The type for a piece (independent from the color)
 data PieceType = King
-    deriving (Show)
+    deriving (Show, Eq)
 
 -- | Files of the board
 data File = A | B | C | D | E | F | G | H
@@ -38,7 +39,7 @@ data Square = Square { file :: File, rank :: Rank}
 
 -- | Datatype for pieces
 data Piece = Piece { value :: PieceType, player :: Player }
-    deriving (Show)
+    deriving (Show, Eq)
 
 -- | The chess board
 data Board = Board (Map Square Piece)
@@ -65,6 +66,10 @@ movePiece source dest board@(Board boardMap) =
         doMove p = addPiece dest p . removePiece source $ board
     in
        maybe board doMove piece 
+
+-- | Get a piece from the given square
+getPiece :: Square -> Board -> Maybe Piece
+getPiece s (Board m) = Map.lookup s m
 
 -- | Empty board
 emptyBoard :: Board
